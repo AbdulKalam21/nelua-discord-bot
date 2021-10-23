@@ -1,0 +1,15 @@
+require 'os'
+require 'io'
+
+local output_file: filestream
+
+local run = io.popen("nelua code.nelua")
+local output = run:read('a')
+
+output_file = io.open("output.txt", "w+")
+output_file:write(output)
+output_file:flush()
+
+output_file:close()
+run:close()
+
