@@ -25,7 +25,7 @@ public class main extends ListenerAdapter{
     public static void main(String[] args) {
         
         try {
-            JDA jda = JDABuilder.createDefault("OTAxMzE0ODQxMDc4MjgwMjIy.YXOE2w.g5J1Lc_inYW7o9PgkPpDMFA59ps").addEventListeners(new main()).build();
+            JDA jda = JDABuilder.createDefault("BOT_TOKEN").addEventListeners(new main()).build();
             jda.awaitReady();
         } catch (LoginException | InterruptedException ex){
             ex.printStackTrace();

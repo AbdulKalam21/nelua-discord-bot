@@ -3,3 +3,8 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore message-specific generated files
+code.nelua
+error.txt
+output.txt
