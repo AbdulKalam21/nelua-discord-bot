@@ -1,2 +1,7 @@
 
-## print("Hello World")
+-- Sum numbers from 1 to 10.
+loca sum = 0
+for i = 1, 10
+  sum = sum + 
+en
+print('The sum is', sum)
