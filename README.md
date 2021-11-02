@@ -1,5 +1,5 @@
 # nelua-discord-bot
-A Discord Bot which compiles and runs nelua source code.
+A Discord Bot which compiles and runs nelua source code, made using [JDA](https://github.com/DV8FromTheWorld/JDA)
 
 ### Prerequisite
 - JDK
