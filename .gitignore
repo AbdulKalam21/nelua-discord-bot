@@ -4,6 +4,9 @@
 # Ignore Gradle build output directory
 build
 
+# Ignore the nelua-lang folder
+nelua-lang
+
 # Ignore message-specific generated files
 code.nelua
 error.txt
