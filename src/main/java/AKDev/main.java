@@ -34,6 +34,7 @@ public class main extends ListenerAdapter{
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+
     }
     
     // BUG: The result is empty no matter what's the input
@@ -42,7 +43,9 @@ public class main extends ListenerAdapter{
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
         msg = event.getMessage();
+
         if(msg.getContentRaw().startsWith("-compile")){
+
             code = msg.getContentRaw().substring(15, msg.getContentRaw().lastIndexOf("```"));
             
             try {
@@ -53,21 +56,28 @@ public class main extends ListenerAdapter{
                 ex.printStackTrace();
             }
             
-            msg.reply("```Compiling...```").mentionRepliedUser(false).queue(response -> {
+            msg.reply("```\nCompiling...```").mentionRepliedUser(false).queue(response -> {
                 
                 try {
-                    process = Runtime.getRuntime().exec("bash -c ./nelua code.nelua > output.txt 2> error.txt");
+                    process = Runtime.getRuntime().exec("./compile.sh");
                     
                     if(process.waitFor(300, TimeUnit.SECONDS)){
+                        
                         error = new File("error.txt");
                         output = new File("output.txt");
+
                         if(error.length() != 0){
+
                             String result = Files.readString(Path.of("error.txt"));
-                            response.editMessage("```" + result + "```").mentionRepliedUser(false).queue();
-                    }else if(output.length() != 0){
+                            response.editMessage("```\n" + result + "```").mentionRepliedUser(false).queue();
+
+                        }else if(output.length() != 0){
+                            
                             String result = Files.readString(Path.of("output.txt"));
-                            response.editMessage("```" + result + "```").mentionRepliedUser(false).queue();
+                            response.editMessage("```\n" + result + "```").mentionRepliedUser(false).queue();
+
                         }
+
                     }else{
                         process.destroyForcibly();
                     }
