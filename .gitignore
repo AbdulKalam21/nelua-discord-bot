@@ -4,10 +4,11 @@
 # Ignore Gradle build output directory
 build
 
-# Ignore the nelua-lang folder
-nelua-lang
-
-# Ignore message-specific generated files
 code.nelua
+output.nelua
+bin
+.settings
+.classpath
+.project
 error.txt
 output.txt

@@ -15,5 +15,5 @@ dependencies {
 }
 
 application {
-    mainClass = 'AKDev.main'
+    mainClass = 'AKDev.neluaBot'
 }
