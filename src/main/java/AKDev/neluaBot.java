@@ -2,6 +2,8 @@ package AKDev;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +23,7 @@ public class neluaBot extends ListenerAdapter{
     public static Process process;
     public static String output;
     public static String error;
-    public static int waitTime = 10;
+    public static int waitTime = 5;
     public static String BOT_TOKEN = "";
     
     public static void main(String[] args) {
@@ -55,7 +57,7 @@ public class neluaBot extends ListenerAdapter{
                         
                         Files.writeString(Path.of("code.nelua"), code);
 
-                        process = Runtime.getRuntime().exec("compile.bat");
+                        process = Runtime.getRuntime().exec("./compile.sh");
                         
                         if(process.waitFor(waitTime, TimeUnit.SECONDS) ) {
                             
@@ -64,7 +66,7 @@ public class neluaBot extends ListenerAdapter{
                             
                             if(output.length() == 0) {
                                 if(error.length() == 0) {
-                                    message.reply("``` Compiled Sucessfully ```").queue();
+                                    message.reply("```Compiled Sucessfully ```").queue();
                                 } else {
                                 	try {
                                 		message.reply("```" + error + "```").queue();
@@ -82,7 +84,7 @@ public class neluaBot extends ListenerAdapter{
                             
                         } else {
                             process.destroyForcibly();
-                            message.reply("``` Process was destroyed forcibly because of Time limit.```").queue();
+                            message.reply("```Compilation was terminated because of time limit```").queue();
                         }
                         
                     } catch (IOException | InterruptedException ex) {
@@ -111,7 +113,28 @@ public class neluaBot extends ListenerAdapter{
     }
     
     public String readFromFile(String file) throws IOException {
-        String data = Files.readString(Path.of(file));
-        return data;
+    	String data = "";
+    	try {
+    		data = Files.readString(Path.of(file), Charset.forName("UTF-8"));
+		} catch (MalformedInputException a) {
+			try {
+				data = Files.readString(Path.of(file), Charset.forName("ISO-8859-1"));
+			} catch (MalformedInputException b) {
+				try {
+					data = Files.readString(Path.of(file), Charset.forName("US-ASCII"));
+				} catch (MalformedInputException c) {
+					try {
+			    		data = Files.readString(Path.of(file), Charset.forName("UTF-16BE"));
+					} catch (MalformedInputException d) {
+						try {
+							data = Files.readString(Path.of(file), Charset.forName("UTF-16LE"));
+						} catch (MalformedInputException e) {
+							data = Files.readString(Path.of(file), Charset.forName("UTF-16"));
+						}
+					}
+				}
+			}
+		}
+    	return data;
     }
 }
