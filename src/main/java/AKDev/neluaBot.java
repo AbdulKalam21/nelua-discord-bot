@@ -1,5 +1,6 @@
 package AKDev;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +21,7 @@ public class neluaBot extends ListenerAdapter{
     public static Process process;
     public static String output;
     public static String error;
-    public static int time = 5;
+    public static int waitTime = 10;
     public static String BOT_TOKEN = "";
     
     public static void main(String[] args) {
@@ -54,9 +55,9 @@ public class neluaBot extends ListenerAdapter{
                         
                         Files.writeString(Path.of("code.nelua"), code);
 
-                        process = Runtime.getRuntime().exec("./compile.sh");
+                        process = Runtime.getRuntime().exec("compile.bat");
                         
-                        if(process.waitFor(time, TimeUnit.SECONDS) ) {
+                        if(process.waitFor(waitTime, TimeUnit.SECONDS) ) {
                             
                             output = readFromFile("output.txt");
                             error = readFromFile("error.txt");                  
@@ -65,15 +66,23 @@ public class neluaBot extends ListenerAdapter{
                                 if(error.length() == 0) {
                                     message.reply("``` Compiled Sucessfully ```").queue();
                                 } else {
-                                    message.reply("```" + error + "```").queue();
+                                	try {
+                                		message.reply("```" + error + "```").queue();
+                                	} catch (IllegalArgumentException ex) {
+                                		message.reply(new File("error.txt")).queue();
+                                	}
                                 }
                             } else {
-                                message.reply("```" + output + "```").queue();
+                            	try {
+                                    message.reply("```" + output + "```").queue();
+                            	} catch (IllegalArgumentException ex) {
+                            		message.reply(new File("output.txt")).queue();
+                            	}
                             }
                             
                         } else {
-                            process.destroy();
-                            message.reply("``` Process was destroyed forcibly ```").queue();
+                            process.destroyForcibly();
+                            message.reply("``` Process was destroyed forcibly because of Time limit.```").queue();
                         }
                         
                     } catch (IOException | InterruptedException ex) {
