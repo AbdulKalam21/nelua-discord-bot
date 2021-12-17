@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
@@ -57,30 +58,34 @@ public class neluaBot extends ListenerAdapter{
                         
                         Files.writeString(Path.of("code.nelua"), code);
 
-                        process = Runtime.getRuntime().exec("./compile.sh");
+                        process = Runtime.getRuntime().exec("compile.bat");
                         
                         if(process.waitFor(waitTime, TimeUnit.SECONDS) ) {
                             
                             output = readFromFile("output.txt");
                             error = readFromFile("error.txt");                  
                             
-                            if(output.length() == 0) {
+                            if(Files.exists(Path.of("output.png"), LinkOption.NOFOLLOW_LINKS)) {
+                            	message.reply(new File("output.png")).mentionRepliedUser(false).queue();
+                            	Files.delete(Path.of("output.png"));
+                            } else if(output.length() == 0) {
                                 if(error.length() == 0) {
-                                    message.reply("```Compiled Sucessfully ```").queue();
+                                    message.reply("```Compiled Sucessfully ```").mentionRepliedUser(false).queue();
                                 } else {
                                 	try {
-                                		message.reply("```" + error + "```").queue();
+                                		message.reply("```" + error + "```").mentionRepliedUser(false).queue();
                                 	} catch (IllegalArgumentException ex) {
-                                		message.reply(new File("error.txt")).queue();
+                                		message.reply(new File("error.txt")).mentionRepliedUser(false).queue();
                                 	}
                                 }
                             } else {
                             	try {
-                                    message.reply("```" + output + "```").queue();
+                                    message.reply("```" + output + "```").mentionRepliedUser(false).queue();
                             	} catch (IllegalArgumentException ex) {
-                            		message.reply(new File("output.txt")).queue();
+                            		message.reply(new File("output.txt")).mentionRepliedUser(false).queue();
                             	}
                             }
+                            
                             
                         } else {
                             process.destroyForcibly();
