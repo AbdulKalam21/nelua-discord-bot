@@ -58,7 +58,7 @@ public class neluaBot extends ListenerAdapter{
                         
                         Files.writeString(Path.of("code.nelua"), code);
 
-                        process = Runtime.getRuntime().exec("compile.bat");
+                        process = Runtime.getRuntime().exec("./compile.sh");
                         
                         if(process.waitFor(waitTime, TimeUnit.SECONDS) ) {
                             
@@ -68,6 +68,9 @@ public class neluaBot extends ListenerAdapter{
                             if(Files.exists(Path.of("output.png"), LinkOption.NOFOLLOW_LINKS)) {
                             	message.reply(new File("output.png")).mentionRepliedUser(false).queue();
                             	Files.delete(Path.of("output.png"));
+                            } else if(Files.exists(Path.of("output.gif"), LinkOption.NOFOLLOW_LINKS)){
+                            	message.reply(new File("output.gif")).mentionRepliedUser(false).queue();
+                            	Files.delete(Path.of("output.gif"));
                             } else if(output.length() == 0) {
                                 if(error.length() == 0) {
                                     message.reply("```Compiled Sucessfully ```").mentionRepliedUser(false).queue();
